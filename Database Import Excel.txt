@@ -1,0 +1,194 @@
+Create table DisputReport( 
+ID                    bigint identity (1,1),
+CaseID	              varchar(50)    null,
+PAN			          varchar(25)	 null,
+ARN				      varchar(25)	 null,
+AuthCode			  varchar(15)	 null,
+ReferenceNumber	      varchar(15)	 null,
+TransactionDate		  datetime		 null,
+CenralProcessingDate  datetime		 null,
+TerminalId  	      varchar(15)	 null,
+TransactionAmount     decimal(18,2)	 null,
+TransactionCurrency   int            null,
+MCC					  varchar(15)	 null,
+TerminalType		  varchar(20)	 null,
+SettlementType        varchar(20)	 null,
+DisputeStatus		  varchar(20)	 null,
+UserID				  varchar(50)	 null,
+RR					  varchar(15)	 null,
+CB					  varchar(20)	 null,
+RP          		  varchar(20)	 null,
+PreArb  			  varchar(15)	 null,
+RRReasonCode		  varchar(15)	 null, 
+CBReasonCode      	  varchar(20)	 null,
+CBCPDate  			  datetime  	 null,
+CBAmount              decimal(18,2)	 null,
+RPReasonCode      	  varchar(20)	 null,
+RPCPDate  			  datetime  	 null,
+RPAmount              decimal(18,2)	 null,
+RPCycle               varchar(10)	 null,
+RPFileID              varchar(50)	 null,
+RRRemainingDays       varchar(50)	 null,
+CBRemainingDays       varchar(50)	 null,
+RPWaitingDays         varchar(50)	 null,
+CBFileId              varchar(100)	 null,
+CBGeneratedDate		  datetime  	 null,
+CreatedBy			  varchar(50)	 null,
+CreatedOn			  datetime		 null,
+ModifiedBy			  varchar(50)	 null,
+ModifiedOn			  datetime		 null
+)
+
+
+
+==================Dsipute Report =========================================
+
+CREATE TYPE TypeDisputeReport AS TABLE( 
+
+CaseID	              varchar(50)    null,
+PAN			          varchar(25)	 null,
+ARN				      varchar(25)	 null,
+AuthCode			  varchar(15)	 null,
+ReferenceNumber	      varchar(15)	 null,
+TransactionDate		  datetime		 null,
+CenralProcessingDate  datetime		 null,
+TerminalId  	      varchar(15)	 null,
+TransactionAmount     decimal(18,2)	 null,
+TransactionCurrency   int            null,
+MCC					  varchar(15)	 null,
+TerminalType		  varchar(20)	 null,
+SettlementType        varchar(20)	 null,
+DisputeStatus		  varchar(20)	 null,
+UserID				  varchar(50)	 null,
+RR					  varchar(50)	 null,
+CB					  varchar(20)	 null,
+RP          		  varchar(20)	 null,
+PreArb  			  varchar(15)	 null,
+RRReasonCode		  varchar(15)	 null, 
+CBReasonCode      	  varchar(20)	 null,
+CBCPDate  			  datetime  	 null,
+CBAmount              decimal(18,2)	 null,
+RPReasonCode      	  varchar(20)	 null,
+RPCPDate  			  datetime  	 null,
+RPAmount              decimal(18,2)	 null,
+RPCycle               varchar(10)	 null,
+RPFileID              varchar(50)	 null,
+RRRemainingDays       varchar(50)	 null,
+CBRemainingDays       varchar(50)	 null,
+RPWaitingDays         varchar(50)	 null,
+CBFileId              varchar(100)	 null,
+CBGeneratedDate		  datetime  	 null,
+CreatedBy			  varchar(50)	 null,
+CreatedOn			  datetime		 null,
+ModifiedBy			  varchar(50)	 null,
+ModifiedOn			  datetime		 null
+)
+
+
+========================= Import SP ========================================
+create PROCEDURE [dbo].[SpUploadDisputeReport]                 
+  @dtDisputeReport TypeDisputeReport READONLY  
+AS  
+BEGIN  
+Create table #TypeDisputeReport(   
+  
+CaseID               varchar(50)    null,  
+PAN             varchar(25)  null,  
+ARN          varchar(25)  null,  
+AuthCode     varchar(15)  null,  
+ReferenceNumber       varchar(15)  null,  
+TransactionDate    datetime   null,  
+CenralProcessingDate  datetime   null,  
+TerminalId         varchar(15)  null,  
+TransactionAmount     decimal(18,2)  null,  
+TransactionCurrency   int            null,  
+MCC       varchar(15)  null,  
+TerminalType    varchar(20)  null,  
+SettlementType        varchar(20)  null,  
+DisputeStatus    varchar(20)  null,  
+UserID      varchar(50)  null,  
+RR       varchar(15)  null,  
+CB       varchar(20)  null,  
+RP              varchar(20)  null,  
+PreArb       varchar(15)  null,  
+RRReasonCode    varchar(15)  null,   
+CBReasonCode         varchar(20)  null,  
+CBCPDate       datetime    null,  
+CBAmount              decimal(18,2)  null,  
+RPReasonCode         varchar(20)  null,  
+RPCPDate       datetime    null,  
+RPAmount              decimal(18,2)  null,  
+RPCycle               varchar(10)  null,  
+RPFileID              varchar(50)  null,  
+RRRemainingDays       varchar(50)  null,  
+CBRemainingDays       varchar(50)  null,  
+RPWaitingDays         varchar(50)  null,  
+CBFileId              varchar(100)  null,  
+CBGeneratedDate    datetime    null,  
+CreatedBy     varchar(50)  null,  
+CreatedOn     datetime   null,  
+ModifiedBy     varchar(50)  null,  
+ModifiedOn     datetime   null  
+  
+)  
+  
+  
+truncate table #TypeDisputeReport  
+  
+Insert into #TypeDisputeReport  
+select * from @dtDisputeReport  
+  
+  
+delete C2 from #TypeDisputeReport C2  
+INNER JOIN DisputReport C3  
+ON C3.ReferenceNumber = C2.ReferenceNumber  
+and C3.CaseID=C2.CaseID  
+AND C3.TransactionAmount=C2.TransactionAmount  
+AND C3.TransactionDate=C2.TransactionDate  
+  
+  
+Insert into DisputReport
+select  
+CaseID             ,   
+PAN           ,   
+ARN        ,   
+AuthCode   ,   
+ReferenceNumber     ,   
+TransactionDate  ,   
+getdate(),   
+TerminalId       ,   
+TransactionAmount   ,   
+TransactionCurrency ,   
+MCC     ,   
+TerminalType  ,   
+SettlementType      ,   
+DisputeStatus  ,   
+UserID    ,   
+RR     ,   
+CB     ,  
+RP            ,  
+PreArb     ,  
+RRReasonCode  ,  
+CBReasonCode       ,  
+CBCPDate     ,  
+CBAmount            ,  
+RPReasonCode       ,  
+RPCPDate     ,  
+RPAmount            ,  
+RPCycle             ,  
+RPFileID            ,  
+RRRemainingDays     ,  
+CBRemainingDays     ,  
+RPWaitingDays       ,  
+CBFileId            ,  
+CBGeneratedDate,
+CreatedBy   ,  
+CreatedOn   ,  
+ModifiedBy   ,  
+ModifiedOn     
+  
+from #TypeDisputeReport  
+  
+  
+END  
+
